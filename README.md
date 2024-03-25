@@ -19,24 +19,22 @@
 
 This is an open-source implementation of Bittensor Subnet 1's (SN1) asynchronous miners by ByteAI. For more information, please see SN1's [official repository](https://github.com/opentensor/prompting).
 
-This repository is the **official codebase for Bittensor Subnet 1 (SN1) v1.0.0+, which was released on 22nd January 2024**. To learn more about the Bittensor project and the underlying mechanics, [read here.](https://docs.bittensor.com/).
+This repository also contains the **official codebase for Bittensor Subnet 1 (SN1) v1.0.0+, which was released on 22nd January 2024**. To learn more about the Bittensor project and the underlying mechanics, [read here.](https://docs.bittensor.com/).
 
 # SN1 Pre-Staging Testnet 102 Streaming Experiments
-If you are seeing this README, you are on the pre-staging branch of SN1 designed to facilitate the development of streaming-capable miners, and running streaming experiments. The README that is currently on `main` is temporarily renamed as `README_main.md` as a reference. 
+This README is in the pre-staging branch of SN1 designed to facilitate the development of streaming-capable miners, and running streaming experiments. The README that is currently on `main` is temporarily renamed as `README_main.md` as a reference. 
 
-As of March 25th, 2024, SN1 will **only support miners with streaming capabilities**. Therefore, the goal of this branch is to give the community access to the production environment before it goes live. 
+As of March 25th, 2024, SN1 **only supports miners with streaming capabilities**. 
 
-**The intended use of this branch is for miners and validators to run on testnet 102**. 
-
-## Important Questions
+## Important Points
 
 ### 1. What is streaming? 
 Streaming is when the miner sends back chunks of data to the validator to enable getting partial responses before timeout. The benefits are two fold:
 1. getting rewards for unfinished, high quality responses, and
 2. enabling a stream-based UI for responsive frontends. 
 
-### 2. How will this change my miner? 
-Stream miners need to implement a new `forward` method that enables async communications to the validator. The template for miners can be found in `docs/stream_miner_template.md`. Follow the instructions in this markdown file to learn the **important** steps needed to convert your miner to this new format. Alternatively, you can run one of the two base miners in the repo: 
+### 2. How mining is affected 
+Stream miners need to implement a new `forward` method that enables async communications to the validator. The template for miners can be found in `docs/stream_miner_template.md`. 
 
 ```bash
 # To run the miner
@@ -51,23 +49,14 @@ python <MINER_PATH>
 where `MINER_PATH` is either: 
 1. neurons/miners/huggingface/miner.py
 2. neurons/miners/openai/miner.py
+ 
 
-It is highly important that you set the `--axon.port` to be one of the open TCP ports on your machine. If you do not do this, you will not recieve requests from validators and will not be able to check the performance of your miner. 
-
-### 3. Do I need to change my hardware?!? 
-No! The hardware requirements for running streaming are identical to before, so there is no need to provision new or more capable resources. 
-
-### 4. Registration 
-Similar to registering a miner on mainnet, you need to register your miner for testnet 102. Here is a simple command to do so: 
+### 3. Registration 
+To do so: 
 `btcli subnet register --netuid 102 --subtensor.network test --wallet.name <YOUR_WALLET_NAME> --wallet.hotkey <YOUR_HOTKEY_NAME>`
 
-To register, you will need test tao! Please reach out to @mccrinbc or @ellesmier for test tao if needed. 
-
-### 5. Validators
-Folks who want to run validators are encouraged to do so. The SN1 development team are dedicating resources to run (at present) 2 validators on testnet 102 to ensure that miners will be busy getting queried. 
-
-### 6. How do I know that my miner is working? 
-The easiest way to make sure that your miner is working is to use the script in `scripts/client.py`. You can query your miner from a **separate** registered hotkey. This must be done because the same hotkey cannot ping itself. 
+### 4. Mining checks 
+Use the script in `scripts/client.py`. You can query your miner from a **separate** registered hotkey. This must be done because the same hotkey cannot ping itself. 
 
 ```bash
 python scripts/client.py --uids YOUR_UIDS --wallet_name <YOUR_WALLET_NAME> --hotkey <YOUR_DIFFERENT_HOTKEY> --message "WHATEVER MESSAGE YOU WANT TO SEND"
